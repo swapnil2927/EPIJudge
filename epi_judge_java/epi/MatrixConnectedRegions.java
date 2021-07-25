@@ -6,10 +6,22 @@ import epi.test_framework.TimedExecutor;
 import java.util.ArrayList;
 import java.util.List;
 public class MatrixConnectedRegions {
+  private static int[] delta = new int[] {0, 1, 0, -1, 0};
   public static void flipColor(int x, int y, List<List<Boolean>> image) {
-    // TODO - you fill in here.
+    flipEntRec(x, y, image, !image.get(x).get(y));
     return;
   }
+
+  private static void flipEntRec(int x, int y, List<List<Boolean>> image, Boolean newColor) {
+    if (x < 0 || x >= image.size() || y < 0 || y >= image.get(x).size() || newColor.equals(image.get(x).get(y))) {
+      return;
+    }
+    image.get(x).set(y, newColor);
+    for (int i=0;i<4; i++) {
+      flipEntRec(x + delta[i], y + delta[i+1], image, newColor);
+    }
+  }
+
   @EpiTest(testDataFile = "painting.tsv")
   public static List<List<Integer>> flipColorWrapper(TimedExecutor executor,
                                                      int x, int y,

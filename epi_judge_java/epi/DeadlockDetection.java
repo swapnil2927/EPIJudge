@@ -5,6 +5,7 @@ import epi.test_framework.GenericTest;
 import epi.test_framework.TimedExecutor;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 public class DeadlockDetection {
 
@@ -15,9 +16,24 @@ public class DeadlockDetection {
   }
 
   public static boolean isDeadlocked(List<GraphVertex> graph) {
-    // TODO - you fill in here.
-    return true;
+    List<GraphVertex> visited = new LinkedList<>();
+    return hasCycle(graph, visited, graph.get(0));
   }
+
+  private static boolean hasCycle(List<GraphVertex> graph, List<GraphVertex> visited, GraphVertex stVer) {
+    if (visited.contains(stVer)) {
+      return true;
+    }
+
+    visited.add(stVer);
+    for (GraphVertex adj : stVer.edges) {
+      if (hasCycle(graph, visited, adj)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   @EpiUserType(ctorParams = {int.class, int.class})
   public static class Edge {
     public int from;

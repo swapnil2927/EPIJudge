@@ -7,10 +7,27 @@ import epi.test_framework.TimedExecutor;
 import java.util.ArrayList;
 import java.util.List;
 public class BstToSortedList {
-  public static BstNode<Integer> bstToDoublyLinkedList(BstNode<Integer> tree) {
-    // TODO - you fill in here.
-    return null;
+  public static BstNode<Integer> bstToDoublyLinkedList(BstNode<Integer> root) {
+    if (root == null) return root;
+    BstNode<Integer>[] ends = transform(root);
+    return ends[0];
   }
+
+  private static BstNode<Integer>[] transform(BstNode<Integer> root) {
+    if(root == null) return new BstNode[]{null, null};
+    BstNode<Integer>[] leftEnds = transform(root.left);
+    if(leftEnds[1] != null) {
+      leftEnds[1].right = root;
+      root.left = leftEnds[1];
+    }
+    BstNode<Integer>[] rightEnds = transform(root.right);
+    if(rightEnds[0] != null) {
+      rightEnds[0].left = root;
+      root.right = rightEnds[0];
+    }
+    return new BstNode[] {leftEnds[0] != null ? leftEnds[0] : root, rightEnds[1] != null ? rightEnds[1] : root};
+  }
+
   @EpiTest(testDataFile = "bst_to_sorted_list.tsv")
   public static List<Integer>
   bstToDoublyLinkedListWrapper(TimedExecutor executor, BstNode<Integer> tree)

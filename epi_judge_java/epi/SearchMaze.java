@@ -4,9 +4,8 @@ import epi.test_framework.EpiUserType;
 import epi.test_framework.GenericTest;
 import epi.test_framework.TestFailure;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+
 public class SearchMaze {
   @EpiUserType(ctorParams = {int.class, int.class})
 
@@ -40,8 +39,35 @@ public class SearchMaze {
 
   public static List<Coordinate> searchMaze(List<List<Color>> maze,
                                             Coordinate s, Coordinate e) {
-    // TODO - you fill in here.
-    return Collections.emptyList();
+    List<Coordinate> path = new LinkedList<>();
+    sMR(maze, s, e, path);
+    return path;
+  }
+
+  private static boolean sMR(List<List<Color>> maze,
+                     Coordinate cur, Coordinate e, List<Coordinate> path) {
+    if (cur.x < 0 || cur.x >= maze.size() || cur.y < 0 || cur.y >= maze.get(cur.x).size()
+            || Color.BLACK.equals(maze.get(cur.x).get(cur.y))) {
+      return false;
+    }
+
+    path.add(new Coordinate(cur.x, cur.y));
+    maze.get(cur.x).set(cur.y, Color.BLACK);
+    if (cur.equals(e)) {
+      return true;
+    }
+
+    for (Coordinate adj : List.of (new Coordinate(cur.x - 1, cur.y),
+            new Coordinate(cur.x, cur.y - 1),
+            new Coordinate(cur.x + 1, cur.y),
+            new Coordinate(cur.x, cur.y + 1))) {
+      if (sMR(maze, adj, e, path)) {
+        return true;
+      }
+    }
+
+    path.remove(path.size() - 1);
+    return false;
   }
   public static boolean pathElementIsFeasible(List<List<Integer>> maze,
                                               Coordinate prev, Coordinate cur) {

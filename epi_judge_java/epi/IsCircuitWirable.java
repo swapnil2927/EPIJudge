@@ -4,8 +4,8 @@ import epi.test_framework.EpiUserType;
 import epi.test_framework.GenericTest;
 import epi.test_framework.TimedExecutor;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+
 public class IsCircuitWirable {
 
   public static class GraphVertex {
@@ -14,8 +14,50 @@ public class IsCircuitWirable {
   }
 
   public static boolean isAnyPlacementFeasible(List<GraphVertex> graph) {
-    // TODO - you fill in here.
+    Map<GraphVertex, Integer> color = new HashMap<>();
+    for (GraphVertex curVer : graph) {
+      if (color.get(curVer) == null) {
+        color.put(curVer, 1);
+        boolean conflictFound = bfs(curVer, color, graph);
+        if (conflictFound) {
+          return false;
+        }
+      }
+    }
     return true;
+  }
+
+  private static boolean bfs(GraphVertex vertex, Map<GraphVertex, Integer> color, List<GraphVertex> graph) {
+    Queue<GraphVertex> nodes = new ArrayDeque<>();
+    if (vertex.edges.size() == 0) {
+      return false;
+    }
+    nodes.add(vertex);
+    while (nodes.size() != 0) {
+      GraphVertex cur = nodes.poll();
+      if (color.get(cur) == 1) {
+        for (GraphVertex adjV : cur.edges) {
+          if (color.get(adjV) == null) {
+            color.put(adjV, 2);
+            nodes.add(adjV);
+          }
+          if (color.get(adjV) == 1) {
+            return true;
+          }
+        }
+      } else if (color.get(cur) == 2) {
+        for (GraphVertex adjV : cur.edges) {
+          if (color.get(adjV) == null) {
+            color.put(adjV, 1);
+            nodes.add(adjV);
+          }
+          if (color.get(adjV) == 2) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
   }
   @EpiUserType(ctorParams = {int.class, int.class})
   public static class Edge {

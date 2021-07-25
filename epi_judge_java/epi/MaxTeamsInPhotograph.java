@@ -4,7 +4,9 @@ import epi.test_framework.EpiUserType;
 import epi.test_framework.GenericTest;
 import epi.test_framework.TimedExecutor;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 public class MaxTeamsInPhotograph {
 
@@ -15,7 +17,10 @@ public class MaxTeamsInPhotograph {
   }
 
   public static int findLargestNumberTeams(List<GraphVertex> graph) {
-    // TODO - you fill in here.
+    if (graph == null) {
+      return 0;
+    }
+    Deque<GraphVertex> q = new ArrayDeque<>();
     return 0;
   }
   @EpiUserType(ctorParams = {int.class, int.class})
